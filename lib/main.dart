@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:myapp/config/theme/app_theme.dart';
-import 'package:myapp/presentation/providers/chat_provider.dart';
-import 'package:myapp/presentation/chat_screen.dart';
 
-void main() => runApp(const MyApp());
+import 'providers/book_provider.dart';
+import 'providers/reader_provider.dart';
+import 'providers/loan_provider.dart';
+import 'screens/home_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicialización directa sin requerir el archivo firebase_options.dart
+  await Firebase.initializeApp();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,12 +22,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => ChatProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => BookProvider()),
+        ChangeNotifierProvider(create: (_) => ReaderProvider()),
+        ChangeNotifierProvider(create: (_) => LoanProvider()),
+      ],
       child: MaterialApp(
-        title: 'Yes No App',
+        title: 'Gestión de Biblioteca',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme(selectedColor: 1).theme(),
-        home: const ChatScreen(),
+        home: const HomeScreen(),
       ),
     );
   }
