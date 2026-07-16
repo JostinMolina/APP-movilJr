@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoanModel {
   String? id;
-  String bookId;       // ID del libro prestado
-  String bookTitle;    // Guardamos el título para mostrarlo fácil en pantalla
-  String readerId;     // ID del lector que se lo lleva
-  String readerName;   // Nombre del lector
-  DateTime loanDate;   // Fecha en la que se prestó
-  bool isReturned;     // ¿Ya lo devolvió?
+  String bookId; // ID del libro prestado
+  String bookTitle; // Guardamos el título para mostrarlo fácil en pantalla
+  String readerId; // ID del lector que se lo lleva
+  String readerName; // Nombre del lector
+  DateTime loanDate; // Fecha en la que se prestó
+  bool isReturned; // ¿Ya lo devolvió?
 
   LoanModel({
     this.id,
@@ -38,7 +38,9 @@ class LoanModel {
       'bookTitle': bookTitle,
       'readerId': readerId,
       'readerName': readerName,
-      'loanDate': Timestamp.fromDate(loanDate), // Convertimos de vuelta a Timestamp
+      'loanDate': Timestamp.fromDate(
+        loanDate,
+      ), // Convertimos de vuelta a Timestamp
       'isReturned': isReturned,
     };
   }

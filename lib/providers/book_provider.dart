@@ -1,109 +1,33 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/book_model.dart';
-import '../repositories/book_repository.dart';
-class BookProvider extends ChangeNotifier {
-  final BookRepository _bookRepository = BookRepository();
 
-  StreamSubscription<List<BookModel>>? _booksSubscription;
+class BookProvider with ChangeNotifier {
+  final CollectionReference _db = FirebaseFirestore.instance.collection('books');
+  List<Book> _books = [];
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  List<Book> get books => _books;
 
-  bool _isFetchLoading = true;
-  bool get isFetchLoading => _isFetchLoading;
-
-  List<BookModel> _books = [];
-  List<BookModel> get books => _books;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
-
-  void listenToBooks() {
-    if (_booksSubscription != null) return;
-
-    _isFetchLoading = true;
-    _errorMessage = null;
-
-    _booksSubscription = _bookRepository.getBooksStream().listen(
-      (bookList) {
-        _books = bookList;
-        _errorMessage = null;
-        _isFetchLoading = false;
-        notifyListeners();
-      },
-      onError: (error) {
-        _errorMessage = 'Error al obtener los libros: $error';
-        _isFetchLoading = false;
-        notifyListeners();
-      },
-    );
+  void loadBooks() {
+    _db.snapshots().listen((snapshot) {
+      _books = snapshot.docs.map((doc) => Book.fromFirestore(doc)).toList();
+      notifyListeners();
+    });
   }
 
-  Future<bool> registerBook({
-    required String title,
-    required String author,
-    required String category,
-    required bool isAvailable,
-  }) async {
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      final newBook = BookModel(
-        title: title,
-        author: author,
-        category: category,
-        isAvailable: isAvailable,
-      );
-
-      await _bookRepository.addBook(newBook);
-
-      _isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    }
+  Future<void> addBook(Book book) async {
+    await _db.add(book.toMap());
   }
 
-  Future<bool> updateExistingBook({
-    required String id,
-    required String title,
-    required String author,
-    required String category,
-    required bool isAvailable,
-  }) async {
-    _isLoading = true;
-    notifyListeners();
-
-    try {
-      final updatedBook = BookModel(
-        id: id,
-        title: title,
-        author: author,
-        category: category,
-        isAvailable: isAvailable,
-      );
-
-      await _bookRepository.updateBook(id, updatedBook);
-
-      _isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    }
+  Future<void> updateBook(String id, Book book) async {
+    await _db.doc(id).update(book.toMap());
   }
 
-  @override
-  void dispose() {
-    _booksSubscription?.cancel();
-    super.dispose();
+  Future<void> deleteBook(String id) async {
+    await _db.doc(id).delete();
+  }
+
+  Future<void> updateAvailability(String id, bool status) async {
+    await _db.doc(id).update({'isAvailable': status});
   }
 }

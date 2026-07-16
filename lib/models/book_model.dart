@@ -1,35 +1,32 @@
-class BookModel {
-  String? id;
-  String title;
-  String author;
-  String category;
-  bool isAvailable;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  BookModel({
-    this.id,
+class Book {
+  final String id;
+  final String title;
+  final String author;
+  final bool isAvailable;
+
+  Book({
+    required this.id,
     required this.title,
     required this.author,
-    required this.category,
-    required this.isAvailable,
+    this.isAvailable = true,
   });
 
-  // Esto convierte los datos de Firebase a nuestra app
-  factory BookModel.fromJson(Map<String, dynamic> json, String documentId) {
-    return BookModel(
-      id: documentId,
-      title: json['title'] ?? '',
-      author: json['author'] ?? '',
-      category: json['category'] ?? '',
-      isAvailable: json['isAvailable'] ?? true,
+  factory Book.fromFirestore(DocumentSnapshot doc) {
+    Map data = doc.data() as Map<String, dynamic>;
+    return Book(
+      id: doc.id,
+      title: data['title'] ?? '',
+      author: data['author'] ?? '',
+      isAvailable: data['isAvailable'] ?? true,
     );
   }
 
-  // Esto convierte los datos de nuestra app para guardarlos en Firebase
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'title': title,
       'author': author,
-      'category': category,
       'isAvailable': isAvailable,
     };
   }

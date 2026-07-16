@@ -21,10 +21,6 @@ class ReaderModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'membershipId': membershipId,
-      'phone': phone,
-    };
+    return {'name': name, 'membershipId': membershipId, 'phone': phone};
   }
 }

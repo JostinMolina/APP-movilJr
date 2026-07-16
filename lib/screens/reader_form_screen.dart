@@ -15,6 +15,7 @@ class _ReaderFormScreenState extends State<ReaderFormScreen> {
   final _nameController = TextEditingController();
   final _membershipIdController = TextEditingController();
   final _phoneController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -26,31 +27,42 @@ class _ReaderFormScreenState extends State<ReaderFormScreen> {
 
   void _saveReader() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       final provider = context.read<ReaderProvider>();
       
-      final success = await provider.registerReader(
-        name: _nameController.text.trim(),
-        membershipId: _membershipIdController.text.trim(),
-        phone: _phoneController.text.trim(),
-      );
+      try {
+        await provider.registerReader(
+          name: _nameController.text.trim(),
+          membershipId: _membershipIdController.text.trim(),
+          phone: _phoneController.text.trim(),
+        );
 
-      if (success && mounted) {
-        Navigator.pop(context); 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('👤 Lector guardado correctamente')),
-        );
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('❌ Error al guardar el lector')),
-        );
+        if (mounted) {
+          Navigator.pop(context); 
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('👤 Lector guardado correctamente')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('❌ Error al guardar el lector')),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<ReaderProvider>().isLoading;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agregar Nuevo Lector'),
@@ -104,8 +116,8 @@ class _ReaderFormScreenState extends State<ReaderFormScreen> {
                     backgroundColor: Colors.teal,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: isLoading ? null : _saveReader,
-                  child: isLoading 
+                  onPressed: _isLoading ? null : _saveReader,
+                  child: _isLoading 
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text('Guardar Lector', style: TextStyle(fontSize: 18)),
                 ),

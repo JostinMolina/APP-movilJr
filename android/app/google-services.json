@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "854113737528",
+    "project_id": "app-movil-b9a70",
+    "storage_bucket": "app-movil-b9a70.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854113737528:android:43db2121de1b118e357fcd",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-5nok14ucJDXarv99dw4vedZBXMjKLbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854113737528:android:524d56f29c9cb440357fcd",
+        "android_client_info": {
+          "package_name": "om.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-5nok14ucJDXarv99dw4vedZBXMjKLbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

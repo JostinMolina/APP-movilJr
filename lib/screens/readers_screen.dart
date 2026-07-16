@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/reader_provider.dart';
-import 'reader_form_screen.dart'; // Importamos el formulario
+import 'reader_form_screen.dart';
 
 class ReadersScreen extends StatefulWidget {
   const ReadersScreen({super.key});
@@ -48,7 +48,6 @@ class _ReadersScreenState extends State<ReadersScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navegamos al formulario de lectores
           Navigator.push(context, MaterialPageRoute(builder: (context) => const ReaderFormScreen()));
         },
         backgroundColor: Colors.teal,

@@ -65,7 +65,7 @@ class LoanProvider extends ChangeNotifier {
       return false;
     }
   }
-  
+
   // Función extra para marcar que ya devolvieron el libro
   Future<bool> markAsReturned(LoanModel loan) async {
     try {
