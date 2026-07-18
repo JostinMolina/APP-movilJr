@@ -7,10 +7,11 @@ import 'providers/reader_provider.dart';
 import 'providers/loan_provider.dart';
 import 'screens/home_screen.dart';
 
-Future<void> main() async {
+void main() async {
+  // 1. Garantiza la comunicación con el motor de Flutter antes de Firebase
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicialización directa sin requerir el archivo firebase_options.dart
+  // 2. Inicializador de Firebase (lee de manera nativa tu google-services.json)
   await Firebase.initializeApp();
 
   runApp(const MyApp());
@@ -30,6 +31,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Gestión de Biblioteca',
         debugShowCheckedModeBanner: false,
+        // Agregamos consistencia de diseño para el examen
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: const Color(0xFF312E81), // Azul índigo elegante
+        ),
         home: const HomeScreen(),
       ),
     );
